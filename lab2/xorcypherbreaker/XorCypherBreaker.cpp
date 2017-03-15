@@ -3,8 +3,6 @@
 //
 
 #include "XorCypherBreaker.h"
-#include <string>
-#include <vector>
 #include <algorithm>
 using std::find;
 using std::vector;
@@ -16,20 +14,19 @@ std::string XorCypherBreaker(const std::vector<char> &cryptogram,
                              int key_length,
                              const std::vector<std::string> &dictionary){
     string A="aaa";
-    string key="";
-    for(int i=97;i<=122;i++){
+    for(char i=97;i<=122;i++){
         A[0]=i;
-        for(int j=97;j<=122;j++){
+        for(char j=97;j<=122;j++){
             A[1]=j;
-            for(int k=97;k<=122;k++){
+            for(char k=97;k<=122;k++){
                 A[2]=k;
-                if(Guess(cryptogram, key_length, dictionary, A)==true){
+                if(Guess(cryptogram, key_length, dictionary, A)){
                     return A;
                 }
             }
         }
     }
-    return "aaa";
+    return "";
 }
 
 

@@ -22,6 +22,9 @@ int **NewArray2D(int n_rows, int n_columns){
     }
     return tab;
 }
+int **Array2D(int n_rows, int n_columns){
+    return NewArray2D(n_rows,n_columns);
+}
 void DeleteArray2D(int **array, int n_rows, int n_columns){
     for (int i=0;i<n_rows;++i){
         delete *(array+i);

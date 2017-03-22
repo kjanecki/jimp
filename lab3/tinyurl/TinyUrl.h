@@ -14,8 +14,8 @@
 namespace tinyurl {
 
     struct TinyUrlCodec{
-        std::string code;
-        std::string url;
+        std::map<std::string,std::string> code_map;
+        std::array<char,6> present_hash;
     };
 
 

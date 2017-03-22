@@ -5,10 +5,10 @@
 #include "TinyUrl.h"
 namespace tinyurl {
 
-    std::array<char,6> arr{'0','0','0','0','0','0'};
-
     std::unique_ptr<TinyUrlCodec> Init(){
         std::unique_ptr<TinyUrlCodec> u_ptr=std::make_unique<TinyUrlCodec>();
+        std::array<char,6> arr{'0','0','0','0','0','0'};
+        u_ptr->present_hash=arr;
         return u_ptr;
     };
 
@@ -36,19 +36,19 @@ namespace tinyurl {
 
     }
 
-
-    std::string Encode(const std::string &url, std::unique_ptr<TinyUrlCodec> *codec) {
+    std::string Encode(const std::string &url, std::unique_ptr<TinyUrlCodec> *codec){
         std::string str="";
         for(int i=0;i<6;i++){
-            str=str+arr.begin()[i];
+            str=str+(*codec)->present_hash.begin()[i];
         }
-        (*codec)->code=str;
-        (*codec)->url=url;
-        NextHash(&arr);
+        (*codec)->code_map.emplace(str,url);
+        NextHash(&(*codec)->present_hash);
         return str;
     }
 
     std::string Decode(const std::unique_ptr<TinyUrlCodec> &codec, const std::string &hash){
-        return codec->url;
+        auto i=codec->code_map.find(hash);
+        return i->second;
     }
+
 }

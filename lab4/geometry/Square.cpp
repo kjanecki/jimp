@@ -10,19 +10,24 @@ namespace geometry{
     double Square::Circumference(){
         double circum;
         circum=p1_.Distance(p2_);
-        if(circum!=p2_.Distance(p3_))
+        if(p1_.Distance(p4_)!=p2_.Distance(p3_)){
             return 0;
-        if(circum!=p3_.Distance(p4_))
+        }
+        if(p1_.Distance(p2_)!=p2_.Distance(p4_)){
             return 0;
-        if(circum!=p4_.Distance(p1_))
-            return 0;
-        if(circum!=p3_.Distance(p1_))
-            return 0;
+        }
+
         return 4*circum;
     }
 
     double Square::Area(){
-        double square_area=p1_.Distance(p2_)*p2_.Distance(p3_);
+        double square_area=p1_.Distance(p2_)*p1_.Distance(p2_);
+        if(p1_.Distance(p4_)!=p2_.Distance(p3_)){
+            return 0;
+        }
+        if(p1_.Distance(p2_)!=p2_.Distance(p4_)){
+            return 0;
+        }
         return square_area;
     }
 }

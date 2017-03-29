@@ -14,6 +14,6 @@ int main(){
     std::string str=R"("\"abc\"")";
     std::string k=str;
 
-    cout << k << "\n\n";
+    cout << k[0] << " " << k[1] << " " << k[2] << "\n\n";
     return 0;
 };

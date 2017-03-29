@@ -3,7 +3,6 @@
 //
 
 #include "SimpleJson.h"
-#include <string>
 
 
 namespace nets{
@@ -102,6 +101,9 @@ namespace nets{
 
                 }
                 str=str+"}";
+                break;
+
+            default:
                 break;
         }
         return str;

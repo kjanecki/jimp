@@ -4,6 +4,7 @@
 
 #include "Matrix.h"
 #include <iostream>
+using ::algebra::Matrix;
 
 int main(){
 
@@ -22,14 +23,11 @@ int main(){
         std::cout << matches[0] << "\n";
     }
 */
-    std::string str5="[1.0i2 2.4i5; 12i1, 2i5]";
-    algebra::Matrix M{str5};
-    algebra::Matrix M2{str5};
-    //std::cout << M.complex_matrix_[0][0] << "\n\n";
-    std::cout << M.Print() << "\n\n";
-    str5="[1.0i2, 12i1; 2.4i5 2i5]";
-    std::cout << M.Print() << "\n\n\n";
-    std::cout << M.Add(M2).Print() << "\n\n";
+    Matrix m1{{1.0i, 0., 0.}, {0., 1.0i, 0.}, {0., 0., 1.0i}};
+    Matrix m2{{7. + 1.0i, 0., 0.}, {0., 1.0i, 8.}, {15. + 2.0i, 0. + 3.0i, 4. + 1.0i}};
+    std::cout << m1.Print() << "\n\n";
+    std::cout << m2.Print() << "\n\n\n";
+    std::cout << m1.Add(m2).Print() << "\n\n";
 
 
     return 0;

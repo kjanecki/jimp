@@ -18,6 +18,8 @@ namespace algebra{
     public:
         Matrix(){
             complex_matrix_=new std::complex<double>*;
+            rows=0;
+            cols=0;
         }
 
         Matrix(unsigned long rows, unsigned long cols);
@@ -28,13 +30,25 @@ namespace algebra{
 
         Matrix(const Matrix &matrix);
 
+        Matrix(const Matrix &&matrix) = delete;
+
         Matrix &operator=(const Matrix &matrix);
+
+        Matrix &operator=(const Matrix &&matrix) = delete;
+
+        ~Matrix();
 
         std::pair<unsigned long, unsigned long> Size();
 
-        std::string Print();
+        std::string Print() const;
 
-        Matrix Add (const Matrix &m2);
+        Matrix Add (const Matrix &m2) const;
+
+        Matrix Sub (const Matrix &m2) const;
+
+        Matrix Mul (const Matrix &m2) const;
+
+        Matrix Pow (const int &ind) const;
 
    private:
         std::complex<double> **complex_matrix_;

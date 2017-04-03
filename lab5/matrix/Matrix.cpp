@@ -37,8 +37,8 @@ namespace algebra {
 
     Matrix::Matrix(std::string text){
         vector<std::string> v;
-        int rows_cnt=0;
-        int cols_cnt=0;
+        unsigned long rows_cnt=0;
+        unsigned long cols_cnt=0;
         std::string temp="";
         bool cols_counted=false;
         for(int i=1; i<text.size();++i){
@@ -133,13 +133,20 @@ namespace algebra {
         return *this;
     };
 
-    std::string Matrix::Print(){
+    Matrix::~Matrix(){
+        for(int i=0; i<rows; ++i){
+            delete complex_matrix_[i];
+        }
+        delete complex_matrix_;
+    }
+
+    std::string Matrix::Print() const{
         std::string str="[";
         for(int i=0; i<rows;++i){
             for(int j=0; j<cols; ++j){
                 str=str+ComplexToString(*(*(complex_matrix_+i)+j));
                 if(j!=cols-1){
-                    str=str+" ";
+                    str=str+", ";
                 }
             }
             if(i!=rows-1)
@@ -149,18 +156,104 @@ namespace algebra {
         return str;
     };
 
-
-    Matrix Matrix::Add (const Matrix &m2){
+    Matrix Matrix::Add (const Matrix &m2) const{
         if(this->rows!=m2.rows or this->cols!=m2.cols){
             return *this;
         }
         else{
+            Matrix new_matrix{*this};
             for(int i=0;i<this->rows;++i){
                 for(int j=0;j<this->cols;++j){
-                    *(*(this->complex_matrix_+i)+j)+=*(*(m2.complex_matrix_+i)+j);
+                    *(*(new_matrix.complex_matrix_+i)+j)=*(*(this->complex_matrix_+i)+j)+*(*(m2.complex_matrix_+i)+j);
                 }
             }
+            Matrix &m_ref=new_matrix;
+            return m_ref;
+        }
+    };
+
+    Matrix Matrix::Sub (const Matrix &m2) const{
+        if(this->rows!=m2.rows or this->cols!=m2.cols){
             return *this;
+        }
+        else{
+            Matrix new_matrix{*this};
+            for(int i=0;i<this->rows;++i){
+                for(int j=0;j<this->cols;++j){
+                    *(*(new_matrix.complex_matrix_+i)+j)=*(*(this->complex_matrix_+i)+j)-*(*(m2.complex_matrix_+i)+j);
+                }
+            }
+            Matrix &m_ref=new_matrix;
+            return m_ref;
+        }
+    };
+
+    Matrix Matrix::Mul (const Matrix &m2) const{
+        if(this->cols!=m2.rows){
+            Matrix new_matrix{};
+            Matrix &m_ref=new_matrix;
+            return m_ref;
+        }
+        else{
+            Matrix new_matrix(this->rows,m2.cols);
+
+            for(int i=0;i<this->rows;++i){
+                for(int j=0;j<m2.cols;++j){
+                    *(*(new_matrix.complex_matrix_+i)+j)=0;
+                    for(int k=0; k<this->cols;k++){
+                        *(*(new_matrix.complex_matrix_+i)+j)+=(*(*(this->complex_matrix_+i)+k))*(*(*(m2.complex_matrix_+k)+j));
+                    }
+                }
+            }
+            Matrix &m_ref=new_matrix;
+            return m_ref;
+        }
+    };
+
+
+    Matrix Matrix::Pow (const int &ind) const{
+        if(this->cols!=this->rows or ind<0){
+            Matrix new_matrix{};
+            Matrix &m_ref=new_matrix;
+            return m_ref;
+        }
+        else{
+            if(ind==0){
+                Matrix new_matrix(this->rows,this->cols);
+                for(int i=0;i<this->rows;++i){
+                    for(int j=0;j<this->cols;++j){
+                        if(i==j){
+                            new_matrix.complex_matrix_[i][j]=1;
+                        }
+                        else{
+                            new_matrix.complex_matrix_[i][j]=0;
+                        }
+                    }
+                }
+                Matrix &m_ref=new_matrix;
+                return m_ref;
+            }
+            else{
+                Matrix new_matrix{*this};
+
+                for(int it=1; it<ind; ++it){
+
+                    Matrix temp_matrix{this->rows,this->cols};
+
+                    for(int i=0;i<this->rows;++i){
+                        for(int j=0;j<this->cols;++j){
+                            *(*(temp_matrix.complex_matrix_+i)+j)=0;
+                            for(int k=0; k<this->cols;k++){
+                                *(*(temp_matrix.complex_matrix_+i)+j)+=(*(*(new_matrix.complex_matrix_+i)+k))*(*(*(this->complex_matrix_+k)+j));
+                            }
+                        }
+                    }
+
+                    new_matrix=temp_matrix;
+                }
+                Matrix &m_ref=new_matrix;
+                return m_ref;
+            }
         }
     };
 

@@ -3,8 +3,6 @@
 //
 
 #include "WordCounter.h"
-//#include <iostream>
-//#include <fstream>
 using ::datastructures::Word;
 using ::datastructures::WordCounter;
 
@@ -23,9 +21,14 @@ int main(){
         std::cout<< "hello 3"<< "\n";
     }
 
-   //std::ifstream kk("asdasd");
-    WordCounter w{Word("raz"),Word("dwa")};
-    //WordCounter w2 = WordCounter::FromInputStream(&kk);
-    //kk.close();
+    std::ifstream is("C:/Users/Krzysiek/Desktop/studia/semestr 2/JIMP2/exercises/lab6/wordcounter/MyFile.txt");
+    if(is.is_open()){
+        std::cout << "no kurde";
+    }
+    WordCounter w{Word("raz"),Word("dwa"),Word("trzyy"),Word("raz")};
+    std::cout << w << "\n\n";
+    WordCounter w2 = WordCounter::FromInputStream(&is);
+    is.close();
+    std::cout << w2;
     return 0;
 }

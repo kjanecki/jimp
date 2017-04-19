@@ -72,28 +72,27 @@ namespace datastructures{
         return obj1.value_==obj2.value_;
     }
 
+    bool operator!=(Counts obj1,Counts obj2){
+        return obj1.value_!=obj2.value_;
+    }
 
-    const std::map<Word,Counts> &WordCounter::FromInputStream(std::ifstream *is){
+    Counts operator-(Counts obj1,Counts obj2){
+        return obj1.value_-obj2.value_;
+    }
+
+    const std::map<Word,Counts> WordCounter::FromInputStream(std::ifstream *is){
         std::map<Word,Counts> counter;
-        char c;
         std::string str="";
-        while((*is) >> c){
-            if((c>=65 && c<=90)or(c>=97 && c<=122)){
-                while((c>=65 && c<=90)or(c>=97 && c<=122)){
-                    str+=c;
-                    (*is)>>c;
-                }
-                auto it=counter.find(str);
-                if(it==counter.end()){
-                    ++it->second;
-                }
-                else{
-                    Word w{str};
-                    Counts c2;
-                    std::pair<Word,Counts> p{w,c2};
-                    counter.insert(it,p);
-                }
-                str="";
+        while((*is)>>str){
+            auto it=counter.find(str);
+            if(it!=counter.end()){
+                ++it->second;
+            }
+            else {
+                Word w{str};
+                Counts c2;
+                std::pair<Word, Counts> p{w, c2};
+                counter.insert(it, p);
             }
         }
         return counter;
@@ -120,5 +119,27 @@ namespace datastructures{
         }
         return s;
     };
+
+    std::ostream& operator<<(std::ostream &str, WordCounter w){
+        std::vector<std::pair<Word,Counts>> ov;
+        for(auto n : w.counter_){
+            ov.push_back(n);
+        }
+        struct {
+            bool operator()(const std::pair<Word,Counts> &a,const std::pair<Word,Counts> &b)
+            {
+                return a.second > b.second;
+            }
+        } customLess;
+        std::sort(ov.begin(), ov.end(), customLess);
+        for(auto it : ov){
+            str<<it.first.GetWord();
+            str<<": ";
+            str<<std::to_string(it.second.GetVal());
+            str<<"\n";
+        }
+        return str;
+    };
+
 
 }

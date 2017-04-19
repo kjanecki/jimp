@@ -10,7 +10,11 @@
 #include <initializer_list>
 #include <memory>
 #include <fstream>
+#include <sstream>
 #include <set>
+#include <string>
+#include <algorithm>
+#include <vector>
 
 namespace datastructures{
 
@@ -33,6 +37,10 @@ namespace datastructures{
 
         friend bool operator==(Counts obj1,Counts obj2);
 
+        friend bool operator!=(Counts obj1,Counts obj2);
+
+        friend Counts operator-(Counts obj1,Counts obj2);
+
         friend const Counts &operator+=(unsigned long &val,const Counts &add);
 
     private:
@@ -42,6 +50,8 @@ namespace datastructures{
     class Word{
     public:
         Word(std::string str): word_(str){};
+
+        std::string GetWord()const{return word_;};
 
         friend bool operator==(const Word &obj1,const Word &obj2);
 
@@ -63,13 +73,15 @@ namespace datastructures{
 
         unsigned long TotalWords();
 
-        static const std::map<Word,Counts> &FromInputStream(std::ifstream *is);
+        static const std::map<Word,Counts> FromInputStream(std::ifstream *is);
 
         WordCounter(const std::map<Word,Counts> &count);
 
         std::set<Word> Words();
 
         int operator[](std::string str);
+
+        friend std::ostream& operator<<(std::ostream &str,WordCounter w);
 
     private:
         std::map<Word,Counts> counter_;
@@ -90,8 +102,14 @@ namespace datastructures{
 
     bool operator==(Counts obj1,Counts obj2);
 
+    bool operator!=(Counts obj1,Counts obj2);
+
+    Counts operator-(Counts obj1,Counts obj2);
+
+    std::ostream& operator<<(std::ostream &str,WordCounter w);
+
+
 
 }
-
 
 #endif //JIMP_EXERCISES_WORDCOUNTER_H

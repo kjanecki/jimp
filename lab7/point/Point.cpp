@@ -21,17 +21,17 @@ namespace algebra{
     //Specjalna inicjalizacja zmiennych. Zmienne są inicjowane
     //nim zostanie wywołane ciało konstruktora
     Point::Point():x_(0),y_(0){
-        //cout << "Konstruktor bezparametrowy Punkt" << endl;
+        cout << "Konstruktor bezparametrowy Punkt" << endl;
     }
 
     Point::Point(double x, double y){
-        //cout << "Konstruktor parametrowy Punkt" << endl;
+        cout << "Konstruktor parametrowy Punkt" << endl;
         x_ = x;
         y_ = y;
     }
 
     Point::~Point(){
-       // cout << "Destruktor Punkt" << endl;
+       cout << "Destruktor Punkt" << endl;
        // cout << endl;
     }
 

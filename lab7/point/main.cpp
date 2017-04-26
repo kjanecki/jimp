@@ -12,12 +12,14 @@ int main(){
 
  /* Odp zadanie 5
 
-    Podczas tworzenia obiektu Point3D najpierw wywolywany jest konstruktor
+    Podczas tworzenia obiektu Point3D najpierw zaczyna się wywoływać konstruktor
     (odpowiednio parametryczny lub nie) Point3D, który następnie wywołuje
     odpowiedni konstruktor Point.
 
-    Podobnie najpierw wywoływany jest destruktor ~Point3D, który wywołuje
-    destruktor ~Point.
+    Oznacza to że właściwie pierwszym utworzony zostaje obiekt Point który
+    jest następnie rozrzeszany o atrybuty Point3D.
+
+    Usuwając obiekt najpierw usuwa się obiekt Point3D, a po nim Point
 */
 
     algebra::Point p(3,1);

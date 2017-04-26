@@ -8,9 +8,7 @@
 using namespace geometria;
 
 int main(){
-    srand(time(NULL));
-    Kolo k;
-    k.Rysuj();
+    srand((unsigned int) time(NULL));
     std::list<Ksztalt*> lista;
     for(int i=0; i<10; ++i){
         int c=rand()%3;
@@ -31,7 +29,11 @@ int main(){
     for(auto n: lista){
         n->Rysuj();
     }
-
+/*
+    W efekcie wywołując metodę Rysuj() dla każdego elementu listy
+    rysowane są różne figury, czyli wirtualna metoda klasy Ksztalt
+    została przeładowana przez metody odpowiednich klas potomnych.
+    */
 
     return 0;
 }

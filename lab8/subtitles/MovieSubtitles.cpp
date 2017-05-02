@@ -45,10 +45,28 @@ namespace moviesubs{
         std::string str;
         std::regex pattern {R"((\d{2}):(\d{2}):(\d{2}),(\d{3}) --> (\d{2}):(\d{2}):(\d{2}),(\d{3}))"};
         std::smatch matches;
+        int cnt=0;
         while(getline(*in,str,'\n')){
+            cnt++;
+            if(cnt!=std::stoi(str)){
+                throw OutOfOrderFrames(str);
+            }
+
+            (*out)<<str <<'\n';
+
+
+            getline(*in,str,'\n');
+
             if(std::regex_search(str,matches,pattern)){
+                if(!ValidateTimes(matches)){
+                    throw SubtitleEndBeforeStart(str,cnt);
+                }
+
                 (*out)<<matches[1] << ":" << matches[2] << ":";
                 int ms=std::stoi(matches[4])+delay;
+                if(ms<0){
+                    throw NegativeFrameAfterShift(str);
+                }
                 if(ms<1000){
                     std::string str2=std::to_string(ms);
                     while(str2.size()<3){
@@ -72,6 +90,9 @@ namespace moviesubs{
 
                 (*out)<<matches[5] << ":" << matches[6] << ":";
                 ms=std::stoi(matches[8])+delay;
+                if(ms<0){
+                    throw NegativeFrameAfterShift(str);
+                }
                 if(ms<1000){
                     std::string str2=std::to_string(ms);
                     while(str2.size()<3){
@@ -95,8 +116,28 @@ namespace moviesubs{
                 }
             }
             else{
-                (*out)<<str <<'\n';
+                std::regex patt {R"([a-zA-Z]+)"};
+                std::smatch match1;
+                if(std::regex_search(str,match1,patt)){
+                    throw MissingTimeSpecification(str);
+                }
+                else {
+                    throw InvalidSubtitleLineFormat(str);
+                }
             }
+            while(str!=""){
+                getline(*in,str,'\n');
+                (*out)<<str;
+                if(!in->eof()){
+                    (*out)<<"\n";
+                }
+            }
+
         }
     };
+    bool SubRipSubtitles::ValidateTimes(std::smatch m){
+        long start_time=std::stoi(m[1])*60*60*1000+std::stoi(m[2])*60*1000+std::stoi(m[3])*1000+std::stoi(m[4]);
+        long end_time=std::stoi(m[5])*60*60*1000+std::stoi(m[6])*60*1000+std::stoi(m[7])*1000+std::stoi(m[8]);
+        return start_time<end_time;
+    }
 }

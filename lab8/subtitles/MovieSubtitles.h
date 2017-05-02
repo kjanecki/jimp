@@ -23,6 +23,8 @@ namespace moviesubs{
     class SubRipSubtitles: public MovieSubtitles{
     public:
         void ShiftAllSubtitlesBy(int,int, std::stringstream*,std::stringstream*);
+    private:
+        bool ValidateTimes(std::smatch);
     };
 
     class NegativeFrameAfterShift: public std::runtime_error{
@@ -43,8 +45,16 @@ namespace moviesubs{
         InvalidSubtitleLineFormat()=delete;
         InvalidSubtitleLineFormat(std::string str):std::runtime_error(str){};
     };
-
-
+    class MissingTimeSpecification: public std::runtime_error{
+    public:
+        MissingTimeSpecification()=delete;
+        MissingTimeSpecification(std::string str):std::runtime_error(str){};
+    };
+    class OutOfOrderFrames: public std::runtime_error{
+    public:
+        OutOfOrderFrames()=delete;
+        OutOfOrderFrames(std::string str):std::runtime_error(str){};
+    };
 }
 
 #endif //JIMP_EXERCISES_MOVIESUBTITLES_H

@@ -41,7 +41,6 @@ namespace academia{
         Pesel(const std::string &str):pesel_(str){
             ValidatePESEL(pesel_);
         };
-        std::string GetString(){return pesel_;};
     private:
         void ValidatePESEL(const std::string &str);
         std::string pesel_;

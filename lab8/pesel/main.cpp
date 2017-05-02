@@ -9,7 +9,7 @@ using namespace academia;
 int main(){
 
     try{
-        Pesel p{"44051401359"};
+        Pesel p{"44051401358"};
     }catch(const InvalidPeselChecksum &arg){
         std::cerr << arg.what() << "\n";
     }catch(const InvalidPeselLength &arg){

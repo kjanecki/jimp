@@ -11,8 +11,6 @@ namespace moviesubs{
         if(fps<0){
             throw std::invalid_argument("fps");
         }
-
-
         std::string str;
         std::regex pattern {R"(\{(\d+)\}\{(\d+)\}(.*))"};
         std::smatch matches;
@@ -39,58 +37,66 @@ namespace moviesubs{
     }
 
     void SubRipSubtitles::ShiftAllSubtitlesBy(int delay,int fps, std::stringstream *in,std::stringstream *out){
-        std::string str,temp;
-        std::regex pattern {R"((\d*)\n(\d\d:\d\d:\d\d,\d\d\d) --> (\d\d:\d\d:\d\d,\d\d\d)((\n.+)+))"};
-        std::regex time_pattern {R"((\d\d):(\d\d):(\d\d),(\d\d\d))"};
+
+        if(fps<0){
+            throw std::invalid_argument("fps");
+        }
+
+        std::string str;
+        std::regex pattern {R"((\d{2}):(\d{2}):(\d{2}),(\d{3}) --> (\d{2}):(\d{2}):(\d{2}),(\d{3}))"};
         std::smatch matches;
-        while(getline(*in,temp,'\n')){
-            str+=temp;
-            if(temp!=""){
-                str+='\n';
-                continue;
-            }
-
-            if(std::regex_search(str, matches, pattern)) {
-                std::smatch matches_start, matches_end;
-                std::string time_start = matches[2];
-                std::string time_end = matches[3];
-                (*out) << matches[1] << "\n";
-                for (int i = 2; i <= 3; ++i) {
-                    std::string present_str;
-                    if(i==2){
-                        present_str=time_start;
+        while(getline(*in,str,'\n')){
+            if(std::regex_search(str,matches,pattern)){
+                (*out)<<matches[1] << ":" << matches[2] << ":";
+                int ms=std::stoi(matches[4])+delay;
+                if(ms<1000){
+                    std::string str2=std::to_string(ms);
+                    while(str2.size()<3){
+                        str2='0'+str2;
                     }
-                    else{
-                        present_str=time_end;
-                    }
-                    if (std::regex_search(present_str, matches_start, time_pattern)) {
-                        int ms = std::stoi(matches_start[4]) + delay;
-                        (*out) << matches_start[1] << ';';
-                        (*out) << matches_start[2] << ';';
-                        if (ms >= 1000) {
-                            int part = ms / 1000;
-                            ms %= 1000;
-                            int sec = std::stoi(matches_start[3]) + part;
-                            (*out) << std::to_string(sec) <<',';
-                        } else {
-                            (*out) << matches_start[3] << ',';
-                        }
-                        (*out) << std::to_string(ms);
-                    }
-                    if (i != 3)
-                        (*out) << " --> ";
+                    (*out)<<matches[3] << "," << str2 << " --> ";
                 }
-                int i = 0;
-                for (auto it : matches) {
-                    if (i >= 4) {
-                        (*out) << it.first.base() << "\n";
-
+                else{
+                    int sec=std::stoi(matches[3])+ms/1000;
+                    ms%=1000;
+                    std::string str2=std::to_string(ms);
+                    while(str2.size()<3){
+                        str2='0'+str2;
                     }
-                    ++i;
+                    std::string str3=std::to_string(sec);
+                    while(str3.size()<2){
+                        str3='0'+str3;
+                    }
+                    (*out)<< str3 << "," << str2 << " --> ";
+                }
+
+                (*out)<<matches[5] << ":" << matches[6] << ":";
+                ms=std::stoi(matches[8])+delay;
+                if(ms<1000){
+                    std::string str2=std::to_string(ms);
+                    while(str2.size()<3){
+                        str2='0'+str2;
+                    }
+                    (*out)<<matches[7] << "," << str2 << " --> ";
+                }
+                else{
+                    int sec=std::stoi(matches[7])+ms/1000;
+                    ms%=1000;
+                    std::string str2=std::to_string(ms);
+                    while(str2.size()<3){
+                        str2='0'+str2;
+                    }
+                    std::string str3=std::to_string(sec);
+                    while(str3.size()<2){
+                        str3='0'+str3;
+                    }
+                    (*out)<< str3 << "," << str2 << '\n';
+
                 }
             }
-            str="";
+            else{
+                (*out)<<str <<'\n';
+            }
         }
     };
-
 }

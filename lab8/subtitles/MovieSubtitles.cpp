@@ -61,9 +61,6 @@ namespace moviesubs{
                 ValidateTimes(matches,str,cnt,delay);
                 (*out)<<matches[1] << ":" << matches[2] << ":";
                 int ms=std::stoi(matches[4])+delay;
-                if(ms<0){
-                    throw NegativeFrameAfterShift(str);
-                }
                 if(ms<1000){
                     std::string str2=std::to_string(ms);
                     while(str2.size()<3){
@@ -110,14 +107,7 @@ namespace moviesubs{
                 }
             }
             else{
-                std::regex patt {R"([a-zA-Z]+)"};
-                std::smatch match1;
-                if(std::regex_search(str,match1,patt)){
-                    throw MissingTimeSpecification(str);
-                }
-                else {
-                    throw InvalidSubtitleLineFormat(str);
-                }
+                throw InvalidSubtitleLineFormat(str);
             }
             while(str!=""){
                 getline(*in,str,'\n');
@@ -135,7 +125,7 @@ namespace moviesubs{
         if(end_time<start_time) {
             throw SubtitleEndBeforeStart(str, cnt);
         }
-        if(start_time+delay<0 or end_time+delay<0){
+        if(start_time+delay<0){
             throw NegativeFrameAfterShift(str);
         }
     }

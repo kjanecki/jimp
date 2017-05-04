@@ -24,7 +24,7 @@ namespace moviesubs{
     public:
         void ShiftAllSubtitlesBy(int,int, std::stringstream*,std::stringstream*);
     private:
-        bool ValidateTimes(std::smatch);
+        void ValidateTimes(std::smatch,std::string,int,int);
     };
 
     class NegativeFrameAfterShift: public std::runtime_error{

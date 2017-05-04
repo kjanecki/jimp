@@ -58,10 +58,7 @@ namespace moviesubs{
             getline(*in,str,'\n');
 
             if(std::regex_search(str,matches,pattern)){
-                if(!ValidateTimes(matches)){
-                    throw SubtitleEndBeforeStart(str,cnt);
-                }
-
+                ValidateTimes(matches,str,cnt,delay);
                 (*out)<<matches[1] << ":" << matches[2] << ":";
                 int ms=std::stoi(matches[4])+delay;
                 if(ms<0){
@@ -90,9 +87,6 @@ namespace moviesubs{
 
                 (*out)<<matches[5] << ":" << matches[6] << ":";
                 ms=std::stoi(matches[8])+delay;
-                if(ms<0){
-                    throw NegativeFrameAfterShift(str);
-                }
                 if(ms<1000){
                     std::string str2=std::to_string(ms);
                     while(str2.size()<3){
@@ -135,9 +129,14 @@ namespace moviesubs{
 
         }
     };
-    bool SubRipSubtitles::ValidateTimes(std::smatch m){
+    void SubRipSubtitles::ValidateTimes(std::smatch m,std::string str, int cnt,int delay){
         long start_time=std::stoi(m[1])*60*60*1000+std::stoi(m[2])*60*1000+std::stoi(m[3])*1000+std::stoi(m[4]);
         long end_time=std::stoi(m[5])*60*60*1000+std::stoi(m[6])*60*1000+std::stoi(m[7])*1000+std::stoi(m[8]);
-        return start_time<end_time;
+        if(end_time<start_time) {
+            throw SubtitleEndBeforeStart(str, cnt);
+        }
+        if(start_time+delay<0 or end_time+delay<0){
+            throw NegativeFrameAfterShift(str);
+        }
     }
 }

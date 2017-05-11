@@ -16,4 +16,12 @@ namespace algo {
         std::transform(m.begin(), m.end(), std::back_inserter(s), [](const auto &it) { return it.second; });
         return s;
     }
+
+    void CopyInto(const std::vector<int> &v, int n_elements, std::vector<int> *out){
+        std::copy_n(v.begin(),n_elements,std::back_inserter(*out));
+    }
+
+    bool Contains(const std::vector<int> &v, int element){
+        return std::find(v.begin(),v.end(),element) != v.end();
+    }
 }

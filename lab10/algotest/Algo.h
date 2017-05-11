@@ -14,6 +14,8 @@
 namespace algo {
     std::set<std::string> Keys(const std::map<std::string, int> &m);
     std::vector<int> Values(const std::map<std::string, int> &m);
+    void CopyInto(const std::vector<int> &v, int n_elements, std::vector<int> *out);
+    bool Contains(const std::vector<int> &v, int element);
 }
 
 #endif //JIMP_EXERCISES_ALGO_H

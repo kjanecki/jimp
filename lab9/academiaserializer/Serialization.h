@@ -1,6 +1,6 @@
-//
-// Created by Pałeł on 2017-05-15.
-//
+
+// Created by Krzysiek on 04.05.2017.
+
 
 #ifndef JIMP_EXERCISES_SERIALIZATION_H
 #define JIMP_EXERCISES_SERIALIZATION_H
@@ -13,6 +13,9 @@
 #include <experimental/optional>
 using namespace std;
 using namespace std::literals;
+
+#include <vector>
+
 
 namespace academia{
 
@@ -103,6 +106,7 @@ namespace academia{
         };
         void ArrayField(const std::string &field_name,
                         const std::vector<std::reference_wrapper<const academia::Serializable>> &value) override{};
+
         void Header(const std::string &object_name) override{
             (*out_) << "<" << object_name << ">";
         };
@@ -142,6 +146,7 @@ namespace academia{
 
         void Separate() override {(*out_) << ", ";};
     };
+
 
 
     class BuildingRepository{

@@ -11,3 +11,5 @@ add_executable(serialization ${SOURCE_FILES} main.cpp)
 
 target_link_libraries(serialization libserialization)
 
+target_link_libraries(serialization libserialization)
+

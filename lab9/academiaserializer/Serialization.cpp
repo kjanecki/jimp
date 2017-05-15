@@ -1,5 +1,5 @@
 //
-// Created by Pałeł on 2017-05-15.
+
 //
 
 #include "Serialization.h"
@@ -19,6 +19,7 @@ namespace academia{
         serializer->Footer("room");
     }
     void Building::Serialize(Serializer *serializer)const{
+
         serializer->Header("building");
         serializer->IntegerField("id",id_);
         serializer->Separate();
@@ -32,6 +33,20 @@ namespace academia{
         }
         serializer->Footer("rooms");
         serializer->Footer("building");
+
+            serializer->Header("building");
+            serializer->IntegerField("id",id_);
+            serializer->Separate();
+            serializer->StringField("name",name_);
+            serializer->Separate();
+            serializer->Header("rooms");
+            for(int i=0; i<rooms_.size();++i){
+                rooms_[i].Serialize(serializer);
+                if(i!=rooms_.size()-1)
+                    serializer->Separate();
+            }
+            serializer->Footer("rooms");
+            serializer->Footer("building");
     }
 
     Building::Building(int id, const std::string &name, const std::vector<Room> &rooms)

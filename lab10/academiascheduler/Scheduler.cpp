@@ -1,0 +1,60 @@
+//
+// Created by Krzysiek on 16.05.2017.
+//
+
+#include "Scheduler.h"
+
+namespace academia {
+
+    SchedulingItem::SchedulingItem(int course_id, int teacher_id, int room_id, int time_slot, int year)
+            : course_id_(course_id), teacher_id_(teacher_id), room_id_(room_id), time_slot_(time_slot), year_(year) {}
+
+    void Schedule::InsertScheduleItem(const SchedulingItem &it) {
+        array_.push_back(it);
+    }
+
+
+    long Schedule::Size() const {
+        return array_.size();
+    }
+
+    const SchedulingItem &Schedule::operator[](const int &id) const {
+        return array_[id];
+    }
+
+    Schedule Schedule::OfTeacher(int teacher_id) const {
+        Schedule new_schedule;
+        std::copy_if(this->array_.begin(),this->array_.end(),std::back_inserter(new_schedule.array_),[teacher_id](const auto &it){return it.TeacherId()==teacher_id;});
+        return new_schedule;
+    }
+
+    Schedule Schedule::OfYear(int year_id) const{
+        Schedule new_schedule;
+        std::copy_if(this->array_.begin(),this->array_.end(),std::back_inserter(new_schedule.array_),[year_id](const auto &it){return it.Year()==year_id;});
+        return new_schedule;
+    }
+
+    Schedule Schedule::OfRoom(int room_id) const{
+        Schedule new_schedule;
+        std::copy_if(this->array_.begin(),this->array_.end(),std::back_inserter(new_schedule.array_),[room_id](const auto &it){return it.RoomId()==room_id;});
+        return new_schedule;
+    }
+
+    std::vector<int> Schedule::AvailableTimeSlots(int n_time_slots) const {
+        std::vector<int> v;
+        int arr[n_time_slots];
+        for(int i=0; i<n_time_slots;++i){
+            arr[i]=i+1;
+        }
+        for(int i=0; i<array_.size();++i){
+            if(array_[i].TimeSlot()<n_time_slots)
+            arr[array_[i].TimeSlot()-1]=0;
+        }
+        for(int i=0; i<n_time_slots;++i){
+            if(arr[i]!=0){
+                v.push_back(arr[i]);
+            }
+        }
+        return v;
+    }
+}

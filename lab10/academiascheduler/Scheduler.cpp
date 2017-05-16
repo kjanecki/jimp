@@ -57,4 +57,52 @@ namespace academia {
         }
         return v;
     }
+
+    Schedule GreedyScheduler::PrepareNewSchedule(const std::vector<int> &rooms,
+                                                 const std::map<int, std::vector<int>> &teacher_courses_assignment,
+                                                 const std::map<int, std::set<int>> &courses_of_year,
+                                                 int n_time_slots) {
+        Schedule new_schedule;
+        int arr[teacher_courses_assignment.size()][n_time_slots];
+        for(int i=0;i<teacher_courses_assignment.size();++i){
+            for(int j=0; j<n_time_slots;++j){
+                arr[i][j]=0;
+            }
+        }
+
+
+        auto year_it = courses_of_year.begin();
+        auto course_it = year_it->second.begin();
+        int flag=0;
+
+        for(auto room_it: rooms){
+            for(int i=1; i<=n_time_slots;++i){
+                for(auto teacher_it: teacher_courses_assignment){
+                    for(auto teacher_course_it: teacher_it.second){
+                        if(teacher_course_it==*course_it and arr[teacher_it.first-1][i-1]==0){
+                            arr[teacher_it.first-1][i-1]=1;
+                            new_schedule.InsertScheduleItem(SchedulingItem{*course_it,teacher_it.first,room_it,i,year_it->first});
+                            ++course_it;
+                            if(course_it==year_it->second.end()){
+                                ++year_it;
+                                if(year_it==courses_of_year.end()){
+                                    return new_schedule;
+                                }
+                                course_it = year_it->second.begin();
+                            }
+                            flag=1;
+                            break;
+                        }
+                    }
+                    if(flag==1){
+                        flag=0;
+                        break;
+                    }
+                }
+            }
+        }
+        throw NoViableSolutionFound{"error"};
+    }
+
+    NoViableSolutionFound::NoViableSolutionFound(const std::string &__arg) : std::runtime_error(__arg) {}
 }

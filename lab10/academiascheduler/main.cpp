@@ -9,6 +9,6 @@ using namespace academia;
 
 int main(){
 
-    Schedule schedule;
+    std::cout << 200/100 << "\n";
     return 0;
 }

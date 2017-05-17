@@ -79,25 +79,26 @@ namespace academia {
             for(int i=1; i<=n_time_slots;++i){
                 for(auto teacher_it: teacher_courses_assignment){
                     for(auto teacher_course_it: teacher_it.second){
-                        if(teacher_course_it==*course_it and arr[teacher_it.first-1][i-1]==0){
-                            arr[teacher_it.first-1][i-1]=1;
+                        if(teacher_course_it==*course_it and arr[teacher_it.first-1][i-1]!=1){
+                            arr[teacher_it.first/100-1][i-1]=1;
                             new_schedule.InsertScheduleItem(SchedulingItem{*course_it,teacher_it.first,room_it,i,year_it->first});
-                            ++course_it;
-                            if(course_it==year_it->second.end()){
-                                ++year_it;
-                                if(year_it==courses_of_year.end()){
-                                    return new_schedule;
-                                }
-                                course_it = year_it->second.begin();
+                            ++i;
+                            if(i>n_time_slots){
+                                break;
                             }
-                            flag=1;
-                            break;
                         }
                     }
-                    if(flag==1){
-                        flag=0;
+                    if(i>n_time_slots){
                         break;
                     }
+                }
+                ++course_it;
+                if(course_it==year_it->second.end()){
+                    ++year_it;
+                    if(year_it==courses_of_year.end()){
+                        return new_schedule;
+                    }
+                    course_it = year_it->second.begin();
                 }
             }
         }

@@ -12,10 +12,15 @@
 namespace tree{
 
 
+
     template <class Type>
     class Node{
         template <class TreeType>
-        friend class Tree;
+            friend class Tree;
+        template <class InOrderTreeType>
+                friend class InOrderTreeIterator;
+        template <class InOrderTreeTestsType>
+            friend class TreeInorderTest;
     public:
         Node(Type value):value_(value){};
 
@@ -98,6 +103,8 @@ namespace tree{
             return largest;
 
         }
+
+        Node<TreeType>* Root(){return root_;};
 
         std::size_t Size(){return size_;}
 

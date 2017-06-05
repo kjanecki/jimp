@@ -8,27 +8,10 @@
 #include <typeinfo>
 #include <queue>
 #include <cmath>
+#include <memory>
 
 namespace tree{
 
-
-
-    template <class Type>
-    class Node{
-        template <class TreeType>
-            friend class Tree;
-        template <class InOrderTreeType>
-                friend class InOrderTreeIterator;
-        template <class InOrderTreeTestsType>
-            friend class TreeInorderTest;
-    public:
-        Node(Type value):value_(value){};
-
-    private:
-        Type value_;
-        Node* left_= nullptr;
-        Node* right_= nullptr;
-    };
 
     template <class TreeType>
     class Tree{
@@ -36,103 +19,74 @@ namespace tree{
         Tree()= default;
 
         Tree(const TreeType& element){
-            Insert(element);
+            node_value=element;
+            ++size_;
         }
 
         void Insert(const TreeType &element) {
-           // Node<TreeType> *new_node= new Node<TreeType>(element);
-            if(!root_){
-                root_=new Node<TreeType>(element);
-                ++size_;
-            }
-            else{
-                int flag=0;
-                Node<TreeType> *node=root_;
-                while(flag==0){
-                    if(element<=node->value_){
-                        if(!node->left_){
-                            node->left_=new Node<TreeType>(element);
-                            ++size_;
-                            flag=1;
-                        }
-                        else{
-                            node=node->left_;
-                        }
-                    }
-                    else{
-                        if(!node->right_){
-                            node->right_=new Node<TreeType>(element);
-                            ++size_;
-                            flag=1;
-                        }
-                        else{
-                            node=node->right_;
-                        }
-                    }
+            if(element <= node_value){
+                if(left_!= nullptr)
+                    left_->Insert(element);
+                else{
+                    left_=std::make_unique<Tree<TreeType>>(element);
                 }
             }
+            else{
+                if(right_!= nullptr)
+                    right_->Insert(element);
+                else{
+                    right_=std::make_unique<Tree<TreeType>>(element);
+                }
+            }
+            ++size_;
         }
 
         TreeType Value(){
-            return root_->value_;
+            return node_value;
         }
 
         bool Find(const TreeType &element) {
             return false;
         }
 
-        std::size_t Depth(size_t depth=0,Node<TreeType> *node= nullptr) {
-            if(root_== nullptr){
-                return 0;
-            }
-            if(!node){
-                node=root_;
-            }
-            depth++;
-            size_t largest=depth;
-            if (node->left_){
-                largest=Depth(depth,node->left_);
-            }
-            if(node->right_){
-                auto k=Depth(depth, node->right_);
-                if(k>largest){
-                    largest=k;
+        std::size_t Depth(size_t depth=0) {
+            ++depth;
+            std::size_t largest=0;
+            if(left_!= nullptr)
+                largest=left_->Depth(depth);
+            if(right_!= nullptr) {
+                std::size_t k = right_->Depth(depth);
+                if (k > largest) {
+                    largest = k;
                 }
             }
-
+            if(depth>largest){
+                largest=depth;
+            }
             return largest;
-
         }
 
-        Node<TreeType>* Root(){return root_;};
+        std::vector<TreeType> InOrder(){
+            std::vector<TreeType> in_order_;
+            SetInOrder(&in_order_);
+            return in_order_;
+        }
+
+        void SetInOrder(std::vector<TreeType> *vec){
+            if(left_!= nullptr)left_->SetInOrder(vec);
+            vec->push_back(node_value);
+            if(right_!= nullptr)right_->SetInOrder(vec);
+        }
+
+        Tree* Root(){return this;};
 
         std::size_t Size(){return size_;}
 
-        ~Tree() {
-            if(root_!= nullptr)
-            {
-                std::queue<Node<TreeType>*> Q;
-                Q.push(root_);
-                while(!Q.empty()){
-                    if(Q.front()->left_!= nullptr)
-                        Q.push(Q.front()->left_);
-                    if(Q.front()->right_!= nullptr)
-                        Q.push(Q.front()->right_);
-                    delete(Q.front());
-                    Q.pop();
-                    size_--;
-                }
-            }
-        }
-
-    private:
-        Node<TreeType> *root_= nullptr;
+        std::unique_ptr<Tree> left_= nullptr;
+        std::unique_ptr<Tree> right_= nullptr;
+        TreeType node_value;
         std::size_t size_=0;
     };
-
-
-
-
 }
 
 

@@ -4,11 +4,14 @@
 
 #include <Tree.h>
 #include <iostream>
+#include <memory>
 
 int main(){
-    tree::Tree<int> tree {5};
-    auto value = tree.Value();
-    std::cout << value << " " << tree.Depth() << " " << tree.Size() << std::endl;
+    int k=0;
+    std::unique_ptr<int> pt= std::make_unique<int>(k);
+    std::unique_ptr<int> pt2 = move(pt);
+    std::cout<<*pt2 << "\n";
+
 
     return 0;
 }

@@ -40,8 +40,8 @@ namespace tree{
     }
 
     template <class Type>
-    std::vector<Type> InOrder(Tree<Type> *tree){
-        return tree->InOrder();
+    InOrderTreeView<Type> InOrder(Tree<Type> *tree){
+        return InOrderTreeView<Type>(tree);
     }
 
     template <class Type>
@@ -49,18 +49,26 @@ namespace tree{
     public:
         InOrderTreeView()= default;
         InOrderTreeView(Tree<Type> *tree){
-
-            std::copy_n(InOrder(tree).begin(),tree->size_,std::back_inserter(in_order_view_));
+            tree_=tree;
+            std::copy_n(tree->InOrder().begin(),tree->size_,std::back_inserter(in_order_view_));
         };
 
         void Implement(Tree<Type> *tree){
-            std::copy_n(InOrder(tree).begin(),tree->size_,std::back_inserter(in_order_view_));
+            std::copy_n(tree->InOrder().begin(),tree->size_,std::back_inserter(in_order_view_));
         }
 
-        int begin(){return in_order_view_[0];}
+        InOrderTreeIterator<Type> begin(){
+            InOrderTreeIterator<Type> t(tree_);
+            return t;
+        }
 
-        int end(){return in_order_view_[in_order_view_.size()-1];}
+        InOrderTreeIterator<Type> end(){
+            InOrderTreeIterator<Type> t(tree_);
+            t.present_index_=t.array_.in_order_view_.size();
+            return t;
+        }
 
+        Tree<Type> * tree_= nullptr;
         std::vector<int> in_order_view_;
     };
 }

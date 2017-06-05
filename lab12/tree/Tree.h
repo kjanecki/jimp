@@ -78,6 +78,33 @@ namespace tree{
             if(right_!= nullptr)right_->SetInOrder(vec);
         }
 
+        std::vector<TreeType> PostOrder(){
+            std::vector<TreeType> post_order_;
+            SetPostOrder(&post_order_);
+            return post_order_;
+        }
+
+        void SetPostOrder(std::vector<TreeType> *vec){
+            if(left_!= nullptr)left_->SetPostOrder(vec);
+            if(right_!= nullptr)right_->SetPostOrder(vec);
+            vec->push_back(node_value);
+        }
+
+
+        std::vector<TreeType> PreOrder(){
+            std::vector<TreeType> pre_order_;
+            SetPreOrder(&pre_order_);
+            return pre_order_;
+        }
+
+        void SetPreOrder(std::vector<TreeType> *vec){
+            vec->push_back(node_value);
+            if(left_!= nullptr)left_->SetPreOrder(vec);
+            if(right_!= nullptr)right_->SetPreOrder(vec);
+
+        }
+
+
         Tree* Root(){return this;};
 
         std::size_t Size(){return size_;}

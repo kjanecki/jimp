@@ -71,6 +71,131 @@ namespace tree{
         Tree<Type> * tree_= nullptr;
         std::vector<int> in_order_view_;
     };
+
+
+    template <class Type>
+    class PostOrderTreeView;
+
+    template <class Type>
+    class PostOrderTreeIterator{
+    public:
+        PostOrderTreeIterator(Tree<Type> *tree):array_{tree}{
+        }
+
+        void operator++(){
+            present_index_++;
+        }
+
+        Type operator*(){return array_.post_order_view_[present_index_];}
+
+        template <class OperatorType>
+        friend bool operator!=(const PostOrderTreeIterator& it1,const PostOrderTreeIterator& it2);
+
+        int present_index_=0;
+        PostOrderTreeView<Type> array_;
+    };
+
+    template <class OperatorType>
+    bool operator!=(const PostOrderTreeIterator<OperatorType>& it1,const PostOrderTreeIterator<OperatorType>& it2){
+        return it1.present_index_!=it2.present_index_;
+    }
+
+    template <class Type>
+    PostOrderTreeView<Type> PostOrder(Tree<Type> *tree){
+        return PostOrderTreeView<Type>(tree);
+    }
+
+    template <class Type>
+    class PostOrderTreeView{
+    public:
+        PostOrderTreeView()= default;
+        PostOrderTreeView(Tree<Type> *tree){
+            tree_=tree;
+            std::copy_n(tree->PostOrder().begin(),tree->size_,std::back_inserter(post_order_view_));
+        };
+
+        void Implement(Tree<Type> *tree){
+            std::copy_n(tree->PostOrder().begin(),tree->size_,std::back_inserter(post_order_view_));
+        }
+
+        PostOrderTreeIterator<Type> begin(){
+            PostOrderTreeIterator<Type> t(tree_);
+            return t;
+        }
+
+        PostOrderTreeIterator<Type> end(){
+            PostOrderTreeIterator<Type> t(tree_);
+            t.present_index_=t.array_.post_order_view_.size();
+            return t;
+        }
+
+        Tree<Type> * tree_= nullptr;
+        std::vector<Type> post_order_view_;
+    };
+
+
+
+    template <class Type>
+    class PreOrderTreeView;
+
+    template <class Type>
+    class PreOrderTreeIterator{
+    public:
+        PreOrderTreeIterator(Tree<Type> *tree):array_{tree}{
+        }
+
+        void operator++(){
+            present_index_++;
+        }
+
+        Type operator*(){return array_.pre_order_view_[present_index_];}
+
+        template <class OperatorType>
+        friend bool operator!=(const PreOrderTreeIterator& it1,const PreOrderTreeIterator& it2);
+
+        int present_index_=0;
+        PreOrderTreeView<Type> array_;
+    };
+
+    template <class OperatorType>
+    bool operator!=(const PreOrderTreeIterator<OperatorType>& it1,const PreOrderTreeIterator<OperatorType>& it2){
+        return it1.present_index_!=it2.present_index_;
+    }
+
+    template <class Type>
+    PreOrderTreeView<Type> PreOrder(Tree<Type> *tree){
+        return PreOrderTreeView<Type>(tree);
+    }
+
+    template <class Type>
+    class PreOrderTreeView{
+    public:
+        PreOrderTreeView()= default;
+        PreOrderTreeView(Tree<Type> *tree){
+            tree_=tree;
+            std::copy_n(tree->PreOrder().begin(),tree->size_,std::back_inserter(pre_order_view_));
+        };
+
+        void Implement(Tree<Type> *tree){
+            std::copy_n(tree->PreOrder().begin(),tree->size_,std::back_inserter(pre_order_view_));
+        }
+
+        PreOrderTreeIterator<Type> begin(){
+            PreOrderTreeIterator<Type> t(tree_);
+            return t;
+        }
+
+        PreOrderTreeIterator<Type> end(){
+            PreOrderTreeIterator<Type> t(tree_);
+            t.present_index_=t.array_.pre_order_view_.size();
+            return t;
+        }
+
+        Tree<Type> * tree_= nullptr;
+        std::vector<Type> pre_order_view_;
+    };
+
+
 }
 
 

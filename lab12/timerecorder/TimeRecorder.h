@@ -5,22 +5,20 @@
 #ifndef JIMP_EXERCISES_TIMERECORDER_H
 #define JIMP_EXERCISES_TIMERECORDER_H
 
+
+#include <map>
 #include <chrono>
-#include <ctime>
-#include <utility>
-using namespace std::chrono;
-namespace profiling{
 
-    template <class ResultType>
-    auto TimeRecorder(ResultType method){
-        high_resolution_clock::time_point t1 = high_resolution_clock::now();
-        auto result = method();
-        high_resolution_clock::time_point t2 = high_resolution_clock::now();
-        duration<double,std::milli> time_span = duration_cast<duration<double>>(t2 - t1);
-        return std::pair<decltype(result),double>(result,time_span.count());
+namespace profiling {
+    template<typename Type>
+    auto TimeRecorder(Type obj) {
+        typedef std::chrono::high_resolution_clock clock;
+        typedef std::chrono::duration<double, std::milli> duration;
+        static clock::time_point t1 = clock::now();
+        auto result = obj();
+        duration difference = clock::now() - t1;
+        return std::pair<decltype(result), double>(result, difference.count());
     };
-
 }
-
 
 #endif //JIMP_EXERCISES_TIMERECORDER_H
